@@ -1,47 +1,57 @@
 # Anim4DC Fox Demo Makefile
-# Darc was right: "copy/paste example makefile and change TARGET/OBJS and add -lraylib"
+# KOS-style structure using standard kos-cc (Darc's approach!)
 
+# Put the filename of the output binary here
 TARGET = fox_demo.elf
+
+# List all of your C files here, but change the extension to ".o"
 OBJS = main.o romdisk.o
 
+# Optional path to a directory of resources to bundle within your ELF binary.
+# Its contents are accessible via the "/rd/" virtual directory at runtime.
+KOS_ROMDISK_DIR = romdisk
+
+# Additional includes for our plugin
+KOS_CFLAGS += -I../../include
+
+# Main rule
 all: $(TARGET)
 
-# Just add raylib to what we know works
+# Include KOS build system
+include $(KOS_BASE)/Makefile.rules
+
+# Standard compile rule handled by KOS (%.o: %.c automatically provided)
+
+# Build the target (link everything together)
 $(TARGET): $(OBJS)
-	sh-elf-gcc -O2 -ml -m4-single -ffunction-sections -fdata-sections \
-		-I$(KOS_BASE)/include -I$(KOS_BASE)/kernel/arch/dreamcast/include \
-		-I$(KOS_BASE)/addons/include -I$(KOS_BASE)/../kos-ports/include \
-		-I$(KOS_BASE)/../kos-ports/raylib4dc/inst/include \
-		-I$(KOS_BASE)/../kos-ports/libGL/inst/include -I../../include \
-		-ml -m4-single -nostartfiles -Wl,--gc-sections \
-		-T$(KOS_BASE)/utils/ldscripts/shlelf.xc \
-		-L$(KOS_BASE)/lib/dreamcast -L$(KOS_BASE)/addons/lib/dreamcast \
-		-L$(KOS_BASE)/../kos-ports/lib \
-		-o $@ $(OBJS) \
-		-lraylib -lGL -lkallisti -lm -lc -lgcc
+	kos-cc -o $@ $(OBJS) -lraylib -lGL
 
-%.o: %.c
-	sh-elf-gcc -O2 -ml -m4-single -ffunction-sections -fdata-sections \
-		-I$(KOS_BASE)/include -I$(KOS_BASE)/kernel/arch/dreamcast/include \
-		-I$(KOS_BASE)/addons/include -I$(KOS_BASE)/../kos-ports/include \
-		-I$(KOS_BASE)/../kos-ports/raylib4dc/inst/include \
-		-I$(KOS_BASE)/../kos-ports/libGL/inst/include -I../../include \
-		-c $< -o $@
-
+# Romdisk creation (using KOS variables)
 romdisk.o:
-	genromfs -f romdisk.img -d romdisk -V ROMDISK
-	sh-elf-objcopy -I binary -O elf32-shl -B sh \
+	$(KOS_GENROMFS) -f romdisk.img -d romdisk -V ROMDISK
+	$(KOS_OBJCOPY) -I binary -O elf32-shl -B sh \
 		--redefine-sym _binary_romdisk_img_start=__romdisk_img \
 		--redefine-sym _binary_romdisk_img_end=__romdisk_img_end \
 		romdisk.img romdisk.o
 
+# CDI creation for Dreamcast hardware/emulator
 cdi: $(TARGET)
 	@echo "Creating Anim4DC Fox Demo CDI"
-	/home/dylan/Documents/Dreamcast-Coding/mkdcdisc/builddir/mkdcdisc \
-		-e $(TARGET) \
-		-o fox_demo.cdi
+	@if [ -n "$(MKDCDISC)" ]; then \
+		$(MKDCDISC) -e $(TARGET) -o fox_demo.cdi; \
+	elif command -v mkdcdisc >/dev/null 2>&1; then \
+		mkdcdisc -e $(TARGET) -o fox_demo.cdi; \
+	elif [ -f /opt/toolchains/dc/bin/mkdcdisc ]; then \
+		/opt/toolchains/dc/bin/mkdcdisc -e $(TARGET) -o fox_demo.cdi; \
+	elif [ -f $(HOME)/Documents/Dreamcast-Coding/mkdcdisc/builddir/mkdcdisc ]; then \
+		$(HOME)/Documents/Dreamcast-Coding/mkdcdisc/builddir/mkdcdisc -e $(TARGET) -o fox_demo.cdi; \
+	else \
+		echo "Error: mkdcdisc not found. Please set MKDCDISC variable or install mkdcdisc."; \
+		exit 1; \
+	fi
 	@echo "Created: fox_demo.cdi"
 
+# Cleans the binary ELF file plus the intermediate .o files
 clean:
 	-rm -f $(TARGET) $(OBJS) *.cdi romdisk.img
 

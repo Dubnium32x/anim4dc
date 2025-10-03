@@ -30,7 +30,7 @@ fox_demo:
 
 fox_demo_cdi: fox_demo
 	@echo "Creating CDI for Fox demo..."
-	cd examples/fox_demo && $(MAKE) cdi
+	cd examples/fox_demo && $(MAKE) cdi MKDCDISC="$(MKDCDISC)"
 	@echo "CDI created successfully!"
 	@echo "CDI location: examples/fox_demo/fox_demo.cdi"
 
