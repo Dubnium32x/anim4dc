@@ -288,4 +288,4 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ---
 
-**Made with ❤️ for the Dreamcast homebrew community**
+**Made with ❤️ for the Dreamcast homebrew community**# anim4dc
