@@ -1,0 +1,25 @@
+# Build artifacts
+*.o
+*.elf
+*.cdi
+*.img
+romdisk.img
+romdisk.o
+
+# Temporary files
+*~
+*.tmp
+*.bak
+
+# IDE files
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Debug files
+*.log
+*.out
