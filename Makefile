@@ -40,14 +40,14 @@ clean:
 	cd examples/fox_demo && $(MAKE) clean
 	@echo "Clean complete!"
 
-# Install target (copy header to system location)
+# Install target (copy header to KOS addons system)
 install:
 	@echo "Installing Anim4DC header..."
-	@if [ ! -d "/opt/toolchains/dc/kos-ports/include/anim4dc" ]; then \
-		mkdir -p /opt/toolchains/dc/kos-ports/include/anim4dc; \
+	@if [ ! -d "$(KOS_BASE)/addons/include/anim4dc" ]; then \
+		mkdir -p $(KOS_BASE)/addons/include/anim4dc; \
 	fi
-	cp include/anim4dc.h /opt/toolchains/dc/kos-ports/include/anim4dc/
-	@echo "Anim4DC header installed to /opt/toolchains/dc/kos-ports/include/anim4dc/"
+	cp include/anim4dc.h $(KOS_BASE)/addons/include/anim4dc/
+	@echo "Anim4DC header installed to $(KOS_BASE)/addons/include/anim4dc/"
 
 # Test target (run in Flycast if available)
 test: fox_demo_cdi

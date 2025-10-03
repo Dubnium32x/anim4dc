@@ -5,15 +5,16 @@ KOS_BASE = /opt/toolchains/dc/kos
 TARGET = fox_demo.elf
 OBJS = main.o romdisk.o
 
-# KOS compiler flags optimized for Dreamcast
+# KOS compiler flags (using KOS_BASE environment variable)
+# Note: Removed -matomic-model to let KOS handle atomic model selection
 KOS_CFLAGS = -O2 -fno-PIC -fno-PIE -fomit-frame-pointer -m4-single -ml -mfsrra -mfsca \
- -ffunction-sections -fdata-sections -matomic-model=soft-imask -ftls-model=local-exec -D__DREAMCAST__ \
+ -ffunction-sections -fdata-sections -ftls-model=local-exec -D__DREAMCAST__ \
  -I$(KOS_BASE)/include -I$(KOS_BASE)/kernel/arch/dreamcast/include -I$(KOS_BASE)/addons/include \
  -I$(KOS_BASE)/../kos-ports/include -I$(KOS_BASE)/../kos-ports/raylib4dc/inst/include \
  -I$(KOS_BASE)/../kos-ports/libGL/inst/include -I../../include \
  -D_arch_dreamcast -D_arch_sub_pristine -Wall -g
 
-# KOS linker flags
+# KOS linker flags (using KOS_BASE environment variable)
 KOS_LDFLAGS = -m4-single -ml -Wl,--gc-sections -T$(KOS_BASE)/utils/ldscripts/shlelf.xc -nostartfiles \
  -L$(KOS_BASE)/lib/dreamcast -L$(KOS_BASE)/addons/lib/dreamcast -L$(KOS_BASE)/../kos-ports/lib
 
