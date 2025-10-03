@@ -258,7 +258,7 @@ Designed for Dreamcast's **16MB RAM constraint**:
 - Reduce instance count (25 → 12 for real hardware)
 - Lower keyframe count in baking
 - Enable LOD culling
-- Use 320x240 resolution
+- Use 640x480 resolution
 
 ### Memory Issues
 - Monitor with `Anim4dcGetStats()`
