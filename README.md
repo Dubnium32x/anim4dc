@@ -13,7 +13,7 @@ Anim4DC is a standalone animation plugin that converts skeletal animations to op
 ### ✨ Key Features
 
 - **🔧 Vertex Animation Baking**: Converts skeletal animations to vertex keyframes for optimal Dreamcast performance
-- **📁 Multi-format Support**: FBX, GLB, GLTF, IQM, OBJ model loading with intelligent fallback chains  
+- **📁 Multi-format Support**: GLB, GLTF, IQM, OBJ model loading with intelligent fallback chains  
 - **🎚️ LOD System**: Distance-based Level-of-Detail rendering and culling optimizations
 - **💾 Memory Optimization**: Hardware-aware memory management for 16MB Dreamcast RAM constraints
 - **⚡ Performance Tuning**: Optimized for 25 FPS @ 25 models or 60 FPS @ 3 models on real hardware
